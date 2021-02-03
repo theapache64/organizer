@@ -5,6 +5,7 @@ private const val IS_DEBUG = false
 
 fun main(args: Array<String>) {
 
+    // If -d passed, it'll also move directories
     val shouldMoveDirs = args.isNotEmpty() && args.first().toLowerCase() == "-d"
 
     val currentDir = if (IS_DEBUG) {
@@ -14,8 +15,11 @@ fun main(args: Array<String>) {
     }
 
     currentDir.listFiles()?.let { files ->
+
+        // Looping through all files
         for (file in files) {
 
+            // Finding target directory name
             val targetDir = if (Files.isRegularFile(file.toPath())) {
                 val extension = ".${file.extension}"
                 FileUtils.getTargetDirName(extension)
@@ -27,6 +31,7 @@ fun main(args: Array<String>) {
                 }
             }
 
+            // Building target file to move
             val targetFile = File("${file.parent}/$targetDir/${file.name}")
             targetFile.parentFile.mkdirs()
             val isMoved = file.renameTo(targetFile)
